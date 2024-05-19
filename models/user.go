@@ -7,9 +7,9 @@ type User struct {
 	Username  string    `json:"username"`
 	Email     string    `json:"email"`
 	Password  string    `json:"password"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 	Role      string    `json:"role"`
-	IsActive  bool      `json:"is_active"`
-	LastLogin time.Time `json:"last_login"`
+	IsActive  bool      `json:"isActive"`
+	LastLogin time.Time `json:"lastLogin"`
 }

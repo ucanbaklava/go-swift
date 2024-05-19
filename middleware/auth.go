@@ -14,6 +14,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		if token == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			c.Abort()
+
 			return
 		}
 
@@ -23,6 +24,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			c.Abort()
+
 			return
 		}
 
@@ -39,8 +41,10 @@ func AdminMiddleware() gin.HandlerFunc {
 		if role != "admin" {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "forbidden"})
 			c.Abort()
+
 			return
 		}
+
 		c.Next()
 	}
 }

@@ -1,12 +1,13 @@
 package utils
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
-// Get it from environment variable
+// Get it from environment variable.
 var jwtKey = []byte("secret_key")
 
 type Claims struct {
@@ -16,8 +17,8 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-func GenerateJWT(username string, role string, email string) (string, error) {
-	//TODO: get expiration time from environment variable or from a config file
+func GenerateJWT(username, role, email string) (string, error) {
+	// TODO: get expiration time from environment variable or from a config file
 	expirationTime := time.Now().Add(24 * time.Hour)
 	claims := &Claims{
 		Username: username,
@@ -28,23 +29,27 @@ func GenerateJWT(username string, role string, email string) (string, error) {
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(jwtKey)
+
+	signedToken, err := token.SignedString(jwtKey)
+	if err != nil {
+		return "", fmt.Errorf("error when generating jwt %w", err)
+	}
+
+	return signedToken, nil
 }
 
 func ParseJWT(tokenString string) (*Claims, error) {
 	claims := &Claims{}
-	token, err := jwt.ParseWithClaims(tokenString, claims, func(t *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(_ *jwt.Token) (any, error) {
 		return jwtKey, nil
 	})
-
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error when parsing jwt %w", err)
 	}
 
 	if !token.Valid {
-		return nil, err
+		return nil, fmt.Errorf("parseJWT => invalid token")
 	}
 
 	return claims, nil
-
 }

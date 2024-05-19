@@ -3,14 +3,14 @@ package models
 import "time"
 
 type Post struct {
-	ID        int        `json:"id" db:"id"`
-	Title     string     `json:"title" db:"title"`
-	Content   string     `json:"content" db:"content"`
-	Excerpt   string     `json:"excerpt" db:"excerpt"`
-	Slug      string     `json:"slug" db:"slug"`
-	UserId    int        `json:"user_id" db:"user_id"`
-	UpdatedAt string     `json:"updated_at" db:"updated_at"`
-	CreatedAt time.Time  `json:"created_at" db:"created_at"`
-	IsDeleted bool       `json:"is_deleted" db:"is_deleted"`
+	ID        int        `db:"id"         json:"id"`
+	Title     string     `db:"title"      json:"title"`
+	Content   string     `db:"content"    json:"content"`
+	Excerpt   string     `db:"excerpt"    json:"excerpt"`
+	Slug      string     `db:"slug"       json:"slug"`
+	UserID    int        `db:"user_id"    json:"userId"`
+	UpdatedAt string     `db:"updated_at" json:"updatedAt"`
+	CreatedAt time.Time  `db:"created_at" json:"createdAt"`
+	IsDeleted bool       `db:"is_deleted" json:"isDeleted"`
 	Comments  []*Comment `json:"comments"`
 }

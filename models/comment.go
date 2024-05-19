@@ -1,10 +1,10 @@
 package models
 
 type Comment struct {
-	Id       int        `json:"id" db:"id"`
-	UserId   int        `json:"user_id" db:"user_id"`
-	PostId   int        `json:"post_id" db:"post_id"`
-	Content  string     `json:"comment" db:"content"`
-	ParentId *int       `json:"parent_id" db:"parent_id"`
+	ID       int        `db:"id"                   json:"id"`
+	UserID   int        `db:"user_id"              json:"userId"`
+	PostID   int        `db:"post_id"              json:"postId"`
+	Content  string     `db:"content"              json:"comment"`
+	ParentID *int       `db:"parent_id"            json:"parentId"`
 	Children []*Comment `json:"children,omitempty"`
 }

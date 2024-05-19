@@ -2,15 +2,18 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
+var DB *sql.DB
+
 func SetupDatabase() (*sql.DB, error) {
 	db, err := sql.Open("sqlite3", "./test.db")
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to setup database %w", err)
 	}
 
 	// Create users table if it doesn't exist
@@ -56,13 +59,12 @@ func SetupDatabase() (*sql.DB, error) {
 	_, err = db.Exec(createTableSQL)
 	if err != nil {
 		log.Fatalf("failed to create table: %v", err)
-		return nil, err
+
+		return nil, fmt.Errorf("failed to create table %w", err)
 	}
 
 	return db, nil
 }
-
-var DB *sql.DB
 
 func InitDatabase() {
 	var err error

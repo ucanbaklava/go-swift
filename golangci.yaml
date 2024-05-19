@@ -1,0 +1,254 @@
+linters-settings:
+  wsl:
+    allow-cuddle-declarations: true
+  depguard:
+    rules:
+      prevent_unmaintained_packages:
+        list-mode: lax # allow unless explicitely denied
+        files:
+          - $all
+          - "!$test"
+        allow:
+          - $gostd
+          - github.com/ucanbaklava
+
+  dupl:
+    threshold: 100
+  funlen:
+    lines: -1 # the number of lines (code + empty lines) is not a right metric and leads to code without empty line or one-liner.
+    statements: 50
+  goconst:
+    min-len: 2
+    min-occurrences: 3
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      - dupImport # https://github.com/go-critic/go-critic/issues/845
+      - ifElseChain
+      - octalLiteral
+      - whyNoLint
+  gocyclo:
+    min-complexity: 15
+  godox:
+    keywords:
+      - FIXME
+  # gofmt:
+  #   rewrite-rules:
+  #     - pattern: "interface{}"
+  #       replacement: "any"
+  goimports:
+    local-prefixes: github.com/golangci/golangci-lint
+  mnd:
+    # don't include the "operation" and "assign"
+    checks:
+      - argument
+      - case
+      - condition
+      - return
+    ignored-numbers:
+      - "0"
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+      - "24"
+    ignored-functions:
+      - strings.SplitN
+  govet:
+    settings:
+      printf:
+        funcs:
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Infof
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Warnf
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Errorf
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Fatalf
+    enable:
+      - nilness
+      - shadow
+  errorlint:
+    asserts: false
+  lll:
+    line-length: 140
+  misspell:
+    locale: US
+    ignore-words:
+      - "importas" # linter name
+  # nolintlint:
+  #   allow-unused: false # report any unused nolint directives
+  #   require-explanation: true # require an explanation for nolint directives
+  #   require-specific: true # require nolint directives to be specific about which linter is being skipped
+  revive:
+    rules:
+      - name: indent-error-flow
+      - name: unexported-return
+        disabled: true
+      - name: unused-parameter
+      - name: unused-receiver
+
+linters:
+  # Disable all linters.
+  # Default: false
+  disable-all: true
+  # Enable specific linter
+  # https://golangci-lint.run/usage/linters/#enabled-by-default
+  enable:
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - canonicalheader
+    - containedctx
+    - contextcheck
+    - copyloopvar
+    - cyclop
+    - decorder
+    - depguard
+    - dogsled
+    - dupl
+    - dupword
+    - durationcheck
+    #- err113
+    - errcheck
+    - errchkjson
+    - errname
+    - errorlint
+    - execinquery
+    - exhaustive
+    #- exhaustruct
+    - exportloopref
+    - fatcontext
+    - forbidigo
+    - forcetypeassert
+    - funlen
+    - gci
+    - ginkgolinter
+    - gocheckcompilerdirectives
+    #- gochecknoglobals
+    - gochecknoinits
+    - gochecksumtype
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - godox
+    - gofmt
+    #- gofumpt
+    - goheader
+    - goimports
+    - gomoddirectives
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - gosimple
+    - gosmopolitan
+    - govet
+    - grouper
+    - importas
+    - inamedparam
+    - ineffassign
+    - interfacebloat
+    - intrange
+    - ireturn
+    - lll
+    - loggercheck
+    - maintidx
+    - makezero
+    - mirror
+    - misspell
+    - mnd
+    #- musttag
+    - nakedret
+    - nestif
+    - nilerr
+    - nilnil
+    - nlreturn
+    - noctx
+    #- nolintlint
+    - nonamedreturns
+    - nosprintfhostport
+    - paralleltest
+    #- perfsprint
+    - prealloc
+    - predeclared
+    - promlinter
+    - protogetter
+    - reassign
+    - revive
+    - rowserrcheck
+    - sloglint
+    - spancheck
+    - sqlclosecheck
+    - staticcheck
+    - stylecheck
+    #- tagalign
+    - tagliatelle
+    - tenv
+    - testableexamples
+    - testifylint
+    - testpackage
+    - thelper
+    - tparallel
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - usestdlibvars
+    #- varnamelen
+    - wastedassign
+    - whitespace
+    - wrapcheck
+    - wsl
+    - zerologlint
+
+  # Enable presets.
+  # https://golangci-lint.run/usage/linters
+  # Default: []
+  presets:
+    - bugs
+    - comment
+    - complexity
+    - error
+    - format
+    - import
+    - metalinter
+    - module
+    - performance
+    - sql
+    - style
+    - test
+    - unused
+  # Enable only fast linters from enabled linters set (first run won't be fast)
+  # Default: false
+  fast: true
+
+issues:
+  # Excluding configuration per-path, per-linter, per-text and per-source
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gomnd
+        - dupl
+        - lll
+        - funlen
+
+    # disabled for just template
+    - linters:
+        - gocritic
+      text: "commentedOutCode:"
+
+    - linters:
+        - gocritic
+      text: "hugeParam:"
+
+# golangci.com configuration
+# https://github.com/golangci/golangci/wiki/Configuration
+service:
+  golangci-lint-version: 1.50.1 # use the fixed version to not introduce new linters unexpectedly
+  prepare:
+    - echo "here I can run custom commands, but no preparation needed for this repo"

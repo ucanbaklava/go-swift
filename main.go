@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -27,6 +28,7 @@ func main() {
 		post, err := postRepo.GetByID(1)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+
 			return
 		}
 
@@ -36,15 +38,17 @@ func main() {
 	auth := r.Group("/api/auth")
 
 	auth.Use(middleware.AuthMiddleware())
-	{
-		auth.GET("/protected", func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{"message": "you are authorized"})
-		})
-		auth.GET("/admin", middleware.AdminMiddleware(), func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{"message": "you are an admin"})
-		})
+
+	auth.GET("/protected", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "you are authorized"})
+	})
+
+	auth.GET("/admin", middleware.AdminMiddleware(), func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "you are an admin"})
+	})
+
+	err := r.Run(":8080")
+	if err != nil {
+		log.Fatalln("fatal")
 	}
-
-	r.Run(":8080")
-
 }
