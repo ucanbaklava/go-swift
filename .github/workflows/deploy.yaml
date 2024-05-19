@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: go get .
       - name: Build
-        run: go build -o myapp
+        run: CGO_ENABLED=1 go build -o myapp
 
      
       - name: Upload to VPS
