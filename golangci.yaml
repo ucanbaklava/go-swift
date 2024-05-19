@@ -1,6 +1,4 @@
 linters-settings:
-  wsl:
-    allow-cuddle-declarations: true
   depguard:
     rules:
       prevent_unmaintained_packages:
@@ -91,141 +89,32 @@ linters-settings:
       - name: unused-receiver
 
 linters:
-  # Disable all linters.
-  # Default: false
   disable-all: true
-  # Enable specific linter
-  # https://golangci-lint.run/usage/linters/#enabled-by-default
   enable:
-    - asasalint
-    - asciicheck
-    - bidichk
-    - bodyclose
-    - canonicalheader
-    - containedctx
-    - contextcheck
-    - copyloopvar
-    - cyclop
-    - decorder
-    - depguard
-    - dogsled
-    - dupl
-    - dupword
-    - durationcheck
-    #- err113
+    - unused
     - errcheck
-    - errchkjson
-    - errname
-    - errorlint
-    - execinquery
-    - exhaustive
-    #- exhaustruct
     - exportloopref
-    - fatcontext
-    - forbidigo
-    - forcetypeassert
-    - funlen
-    - gci
-    - ginkgolinter
-    - gocheckcompilerdirectives
-    #- gochecknoglobals
-    - gochecknoinits
-    - gochecksumtype
-    - gocognit
-    - goconst
     - gocritic
-    - gocyclo
-    - godot
-    - godox
-    - gofmt
-    #- gofumpt
-    - goheader
+    - gofumpt
     - goimports
-    - gomoddirectives
-    - gomodguard
-    - goprintffuncname
-    - gosec
-    - gosimple
-    - gosmopolitan
-    - govet
-    - grouper
-    - importas
-    - inamedparam
-    - ineffassign
-    - interfacebloat
-    - intrange
-    - ireturn
-    - lll
-    - loggercheck
-    - maintidx
-    - makezero
-    - mirror
-    - misspell
-    - mnd
-    #- musttag
-    - nakedret
-    - nestif
-    - nilerr
-    - nilnil
-    - nlreturn
-    - noctx
-    #- nolintlint
-    - nonamedreturns
-    - nosprintfhostport
-    - paralleltest
-    #- perfsprint
-    - prealloc
-    - predeclared
-    - promlinter
-    - protogetter
-    - reassign
     - revive
-    - rowserrcheck
-    - sloglint
-    - spancheck
-    - sqlclosecheck
+    - gosimple
+    - govet
+    - ineffassign
+    - lll
+    - misspell
     - staticcheck
     - stylecheck
-    #- tagalign
-    - tagliatelle
-    - tenv
-    - testableexamples
-    - testifylint
-    - testpackage
-    - thelper
-    - tparallel
     - typecheck
     - unconvert
     - unparam
-    - unused
-    - usestdlibvars
-    #- varnamelen
-    - wastedassign
-    - whitespace
-    - wrapcheck
-    - wsl
-    - zerologlint
-
-  # Enable presets.
-  # https://golangci-lint.run/usage/linters
-  # Default: []
-  presets:
-    - bugs
-    - comment
-    - complexity
-    - error
-    - format
-    - import
-    - metalinter
-    - module
-    - performance
-    - sql
-    - style
-    - test
-    - unused
-  # Enable only fast linters from enabled linters set (first run won't be fast)
-  # Default: false
-  fast: true
+    - gci
+    - gosec
+    - asciicheck
+    - prealloc
+    - predeclared
+    - makezero
+  fast: false
 
 issues:
   # Excluding configuration per-path, per-linter, per-text and per-source
@@ -249,6 +138,6 @@ issues:
 # golangci.com configuration
 # https://github.com/golangci/golangci/wiki/Configuration
 service:
-  golangci-lint-version: 1.50.1 # use the fixed version to not introduce new linters unexpectedly
+  golangci-lint-version: 1.58.1 # use the fixed version to not introduce new linters unexpectedly
   prepare:
     - echo "here I can run custom commands, but no preparation needed for this repo"
