@@ -62,7 +62,7 @@ jobs:
         - name: Display updated file
           run: | 
             cat prometheus.yml                
-            cat promtail-config.yml
+            cat promtail-config.yaml
 
 
 
