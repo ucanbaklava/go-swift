@@ -51,21 +51,13 @@ jobs:
         - name: Checkout repository
           uses: actions/checkout@v3
 
-        - name: Install yq
-          run: |
-            sudo apt-get update
-            sudo apt-get install -y jq
-            sudo wget https://github.com/mikefarah/yq/releases/download/v4.6.1/yq_linux_amd64 -O /usr/bin/yq
-            sudo chmod +x /usr/bin/yq
 
         - name: Update Prometheus and Promtail password
-          run: |
-            yq -i '.remote_write[0].basic_auth.password = env(PROMETHEUS_PASSWORD)' prometheus.yml
-            env:
-            PROMETHEUS_PASSWORD: ${{ secrets.PROMETHEUS_PASSWORD }}
-            yq -i '.remote_write[0].basic_auth.password = env(LOKI_PASSWORD)' promtail-config.yml
-            env:
-            LOKI_PASSWORD: ${{ secrets.LOKI_PASSWORD }}
+          uses: mikefarah/yq@master
+          with:
+            cmd: |
+             yq '.remote_write[0].basic_auth.password = ${{secrets.PROMETHEUS_PASSWORD}}' prometheus.yml
+             yq '.remote_write[0].basic_auth.password = ${{secrets.PROMETHEUS_PASSWORD}}' promtail.yml
 
         - name: Display updated file
           run: | 
