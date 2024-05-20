@@ -61,7 +61,7 @@ jobs:
                 if [ "$(docker ps -aq -f name=myapp)" ]; then
                     docker rm myapp
                 fi
-                docker run -d --name myapp ${{ env.REGISTRY }}/${{ github.repository }}:main
+                docker run -d -p 8080:8080 --name myapp ${{ env.REGISTRY }}/${{ github.repository }}:main
 
 
 
