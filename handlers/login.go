@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"errors"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -68,6 +69,8 @@ func Login(c *gin.Context) {
 
 		return
 	}
+
+	slog.Info("username", user.Username, "logged in")
 
 	c.JSON(http.StatusOK, gin.H{"token": token})
 }

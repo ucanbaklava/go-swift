@@ -11,7 +11,7 @@ import (
 var DB *sql.DB
 
 func SetupDatabase() (*sql.DB, error) {
-	db, err := sql.Open("sqlite3", "./test.db")
+	db, err := sql.Open("sqlite3", "./test.db?_journal_mode=WAL")
 	if err != nil {
 		return nil, fmt.Errorf("failed to setup database %w", err)
 	}

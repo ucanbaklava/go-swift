@@ -1,0 +1,57 @@
+version: '3.8'
+
+services: 
+  myapp:
+    image: ghcr.io/ucanbaklava/go-swift:main
+    container_name: myapp
+    ports:
+      - 8080:8080    
+    volumes:
+      - myapp-log:/var/log
+    networks:
+      - app-network
+
+
+
+  
+  promtail:
+    image: grafana/promtail:2.4.1
+    container_name: promtail
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/promtail-config.yaml
+      - myapp-log:/var/log
+    command: -config.file=/etc/promtail/promtail-config.yaml
+    networks:
+      - app-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - app-network
+
+  node-exporter:
+    image: prom/node-exporter
+    networks:
+      - app-network
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'      
+    ports:
+      - 9100:9100
+
+volumes:
+  myapp-log:
+
+networks:
+  app-network:

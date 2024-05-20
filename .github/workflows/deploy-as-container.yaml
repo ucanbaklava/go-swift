@@ -43,10 +43,51 @@ jobs:
                 tags: ${{ steps.meta.outputs.tags }}
                 labels: ${{ steps.meta.outputs.labels }}
 
+
+    update-password:
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v3
+
+        - name: Install yq
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y jq
+            sudo wget https://github.com/mikefarah/yq/releases/download/v4.6.1/yq_linux_amd64 -O /usr/bin/yq
+            sudo chmod +x /usr/bin/yq
+
+        - name: Update Prometheus and Promtail password
+          run: |
+            yq -i '.remote_write[0].basic_auth.password = env(PROMETHEUS_PASSWORD)' prometheus.yml
+            env:
+            PROMETHEUS_PASSWORD: ${{ secrets.PROMETHEUS_PASSWORD }}
+            yq -i '.remote_write[0].basic_auth.password = env(LOKI_PASSWORD)' promtail-config.yml
+            env:
+            LOKI_PASSWORD: ${{ secrets.LOKI_PASSWORD }}
+
+        - name: Display updated file
+          run: | 
+            cat prometheus.yml                
+            cat promtail-config.yml
+
+
+
     deploy:
         runs-on: ubuntu-20.04
         needs: build-and-push-image
         steps:
+
+        - name: Copy docker-compose.yml to server
+          uses: appleboy/scp-action@master
+          with:
+            host: ${{ secrets.SSH_HOST }}
+            username: ${{ secrets.SSH_USER }}
+            key: ${{ secrets.SSH_KEY }}
+            source: "docker-compose.yml"
+            target: "/home/ubuntu/"
+
         - name: Deploy to VPS
           uses: appleboy/ssh-action@v0.1.6
           with:
@@ -54,14 +95,8 @@ jobs:
             username: ${{ secrets.SSH_USER }}
             key: ${{ secrets.SSH_KEY }}
             script: | 
-                docker pull ${{ env.REGISTRY }}/${{ github.repository }}
-                if [ "$(docker ps -q -f name=myapp)" ]; then 
-                    docker stop myapp
-                fi
-                if [ "$(docker ps -aq -f name=myapp)" ]; then
-                    docker rm myapp
-                fi
-                docker run -d --name myapp ${{ env.REGISTRY }}/${{ github.repository }}
+                cd /home/ubuntu
+                docker-compose up -d
 
 
 
