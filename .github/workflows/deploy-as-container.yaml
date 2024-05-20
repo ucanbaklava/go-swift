@@ -56,8 +56,8 @@ jobs:
           uses: mikefarah/yq@master
           with:
             cmd: |
-             yq '.remote_write[0].basic_auth.password = ${{secrets.PROMETHEUS_PASSWORD}}' prometheus.yml
-             yq '.remote_write[0].basic_auth.password = ${{secrets.PROMETHEUS_PASSWORD}}' promtail.yml
+             yq '.remote_write[0].basic_auth.password = "${{secrets.PROMETHEUS_PASSWORD}}"' prometheus.yml
+             yq '.remote_write[0].basic_auth.password = "${{secrets.PROMETHEUS_PASSWORD}}"' promtail.yml
 
         - name: Display updated file
           run: | 
